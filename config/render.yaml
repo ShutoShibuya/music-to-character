@@ -1,0 +1,109 @@
+# キャラクター描画のレイアウト設定 (キャンバス座標は左上が原点、y は下向き、単位は px)。
+# パーツの「値」(角度・倍率など)は character_parts.yaml、ここは「基準となる配置と大きさ」。
+# 顔のパーツは頭 (head) の中心 (cx, cy) からの相対位置で配置する。
+#
+# ★ 暫定値。描画を見ながら調整する。
+
+canvas:
+  width: 400
+  height: 500
+  background: "#f7f5f0"
+
+head:                         # 頭(輪郭)
+  cx: 200
+  cy: 190
+  width: 240
+  height: 220
+  min_corner: 28              # outline_roundness=0 のときの角の丸み半径。1 のとき min(width, height)/2
+  stroke_width: 3
+  stroke_lightness_delta: 0.25  # 輪郭線の色は、塗りの明度をこの分だけ下げる(0〜1)
+
+colors:
+  hue_deg: 200                # 体と頭の色相(度)。明度・彩度は body_lightness / body_saturation で決まる
+  eye: "#2b2b3a"
+  highlight: "#ffffff"
+  brow: "#3a2f2f"
+  mouth_line: "#5a2b2b"
+  mouth_inside: "#7a2e3a"
+  cheek: "#ff7a8a"
+
+eyes:                         # eye_spacing / eye_height / eye_angle / eye_highlight が掛かる
+  y_offset: 5                 # 頭の中心からの縦位置
+  spacing: 90                 # 左右の目の中心間距離 (eye_spacing=1.0 のとき)
+  rx: 16                      # 目の横半径
+  ry: 20                      # 目の縦半径 (eye_height=1.0 のとき)
+  highlight_max_r: 7          # eye_highlight=1.0 のときのハイライト半径
+  highlight_dx: 0.35          # ハイライト位置: 目の中心から右へ rx × この値(左右の目で同じ向き=光源が同じ)
+  highlight_dy: 0.35          #                 目の中心から上へ ry × この値
+
+brows:                        # eye_brow_distance / brow_angle / brow_thickness / brow_shortness が掛かる
+  gap: 18                     # 目の上端から眉までの距離 (eye_brow_distance=1.0 のとき)
+  length: 46                  # 眉の長さ (brow_shortness=0 のとき)
+  thickness: 5                # 眉の太さ (brow_thickness=1.0 のとき)
+  max_shortening: 0.5         # brow_shortness=1 のとき、長さをこの割合だけ短くする (0〜1)
+
+mouth:                        # mouth_corner / mouth_openness が掛かる
+  y_offset: 55
+  half_width: 28
+  curve_depth: 22             # mouth_corner=±1 のときの口角の上下量
+  max_open: 26                # mouth_openness=1 のときの口の開き(縦)
+  line_width: 4
+
+cheeks:                       # cheek_intensity が掛かる
+  y_offset: 38
+  x_offset: 78                # 頭の中心から左右への距離
+  rx: 22
+  ry: 14
+  max_opacity: 0.7
+
+body:                         # body_width / body_height / body_texture / body_lightness / body_saturation が掛かる
+  top_overlap: 20             # 体の上端を頭の下端からこの分だけ頭側に重ねる(体は頭の後ろに描く)
+  width: 200                  # 体の幅 (body_width=1.0 のとき)
+  height: 150                 # 体の高さ (body_height=1.0 のとき)
+  corner_ratio: 0.45          # 角の丸み = min(幅, 高さ) × この値 (0〜0.5)
+  lightness_shift: -0.06      # 体の色は、頭の明度にこの値を足した色(負で少し暗い)
+  stroke_width: 3
+  texture_max_opacity: 0.6    # body_texture=1.0 のときのざらつきの濃さ
+  texture_contrast: 0.25      # ざらつきの粒の色は、体の明度をこの分だけずらした色(体が暗ければ明るい粒、明るければ暗い粒)
+  texture_freq_min: 0.15      # body_texture=0 側のノイズの細かさ (feTurbulence の baseFrequency)
+  texture_freq_max: 0.9       # body_texture=1 側のノイズの細かさ(大きいほど粒が細かい)
+  texture_octaves: 2
+  texture_seed: 7             # ノイズの乱数シード(固定。同じ入力から同じ見た目になる)
+
+# エフェクト: キャラクターの周りに浮かぶ飾り。effect_count 個だけ、リストの先頭から順に使う(位置は固定)。
+# 体の最大幅でも頭・体に重ならない余白に置くこと(テストで検査する)。
+#   kind: sparkle(4点のきらきら) / dot(点)   x, y: キャンバス座標   size: 大きさ(px)   rot: 回転(度)
+effects:
+  color: "#ffd84a"
+  slots:
+    - {kind: sparkle, x: 352, y: 110, size: 18, rot: 0}
+    - {kind: sparkle, x: 48,  y: 150, size: 14, rot: 0}
+    - {kind: sparkle, x: 200, y: 42,  size: 14, rot: 0}
+    - {kind: dot,     x: 60,  y: 62,  size: 6,  rot: 0}
+    - {kind: sparkle, x: 355, y: 250, size: 12, rot: 0}
+    - {kind: sparkle, x: 45,  y: 270, size: 16, rot: 0}
+    - {kind: dot,     x: 350, y: 385, size: 7,  rot: 0}
+    - {kind: sparkle, x: 50,  y: 400, size: 12, rot: 0}
+
+# 装飾: 頭や体に付ける飾り。decoration_amount 個だけ、リストの先頭から順に使う(位置は固定)。
+# 位置は頭または体の大きさに対する相対座標なので、体の幅・高さが変わっても体の上に乗る。
+#   kind: ribbon / button / dot / star / heart
+#   anchor: head | body   fx: 左右 (-0.5=左端〜0.5=右端)   fy: 上下 (0=上端〜1=下端)
+#   size: 大きさ(px)   rot: 回転(度)   accent: 1 または 2 (下の accent_1 / accent_2 の色)
+# 顔のパーツと重ならないよう、頭の飾りは上端付近 (fy <= 0.2)、体の飾りは fy >= 0.3 に置くこと。
+decorations:
+  accent_1: "#ff6f91"
+  accent_2: "#ffd166"
+  stroke: "#3a2f2f"
+  stroke_width: 2
+  slots:
+    - {kind: ribbon, anchor: head, fx: -0.30, fy: 0.04, size: 24, rot: -20, accent: 1}
+    - {kind: button, anchor: body, fx: 0.0,   fy: 0.38, size: 9,  rot: 0,   accent: 2}
+    - {kind: button, anchor: body, fx: 0.0,   fy: 0.68, size: 9,  rot: 0,   accent: 2}
+    - {kind: star,   anchor: head, fx: 0.30,  fy: 0.07, size: 14, rot: 10,  accent: 2}
+    - {kind: dot,    anchor: body, fx: -0.25, fy: 0.52, size: 7,  rot: 0,   accent: 1}
+    - {kind: dot,    anchor: body, fx: 0.25,  fy: 0.52, size: 7,  rot: 0,   accent: 1}
+    - {kind: heart,  anchor: body, fx: -0.28, fy: 0.82, size: 11, rot: -10, accent: 1}
+    - {kind: heart,  anchor: body, fx: 0.28,  fy: 0.82, size: 11, rot: 10,  accent: 1}
+    - {kind: dot,    anchor: head, fx: -0.12, fy: 0.07, size: 5,  rot: 0,   accent: 2}
+    - {kind: dot,    anchor: head, fx: 0.12,  fy: 0.07, size: 5,  rot: 0,   accent: 1}

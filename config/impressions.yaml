@@ -1,0 +1,68 @@
+# 印象1〜8の計算設定。値は 0.0(label_low) 〜 1.0(label_high)。
+# inputs: 正規化済み特徴量名 -> {weight, direction}
+#   direction: direct  = 特徴量が大きいほど印象値が大きい (label_high 寄り)
+#              inverse = 特徴量が大きいほど印象値が小さい (label_low 寄り)
+#   weight   : 正の数。合計が1である必要はない(利用可能な入力で再正規化される)。
+#
+# ★ 使用特徴量の区分は仕様どおり。特徴量の選択・重み・向きは暫定値で、調整対象。
+impressions:
+  1:  # 激しい(0) 〜 穏やか(1) : B, F, H
+    label_low: 激しい
+    label_high: 穏やか
+    inputs:
+      bpm:                 {weight: 0.30, direction: inverse}
+      rms_mean:            {weight: 0.25, direction: inverse}
+      onset_density:       {weight: 0.25, direction: inverse}
+      onset_strength_mean: {weight: 0.20, direction: inverse}
+  2:  # 明るい(0) 〜 暗い(1) : A, G
+    label_low: 明るい
+    label_high: 暗い
+    inputs:
+      major_score:         {weight: 0.60, direction: inverse}
+      chord_minor_ratio:   {weight: 0.40, direction: direct}
+  3:  # 安定(0) 〜 緊迫(1) : C, G
+    label_low: 安定
+    label_high: 緊迫
+    inputs:
+      leap_ratio:          {weight: 0.30, direction: direct}
+      pitch_change_rate:   {weight: 0.20, direction: direct}
+      chord_change_rate:   {weight: 0.25, direction: direct}
+      chord_complexity:    {weight: 0.25, direction: direct}
+  4:  # 軽い(0) 〜 重い(1) : D, H
+    label_low: 軽い
+    label_high: 重い
+    inputs:
+      pitch_mean:          {weight: 0.30, direction: inverse}
+      pitch_median:        {weight: 0.20, direction: inverse}
+      mean_note_duration:  {weight: 0.30, direction: direct}
+      gap_ratio:           {weight: 0.20, direction: inverse}
+  5:  # 壮大(0) 〜 こじんまり(1) : D, F
+    label_low: 壮大
+    label_high: こじんまり
+    inputs:
+      pitch_mean:          {weight: 0.25, direction: direct}
+      rms_mean:            {weight: 0.40, direction: inverse}
+      rms_max:             {weight: 0.35, direction: inverse}
+  6:  # 感情豊か(0) 〜 淡々(1) : C, F
+    label_low: 感情豊か
+    label_high: 淡々
+    inputs:
+      pitch_change_rate:   {weight: 0.25, direction: inverse}
+      mean_interval:       {weight: 0.25, direction: inverse}
+      rms_std:             {weight: 0.50, direction: inverse}
+  7:  # シンプル(0) 〜 複雑(1) : C, E
+    label_low: シンプル
+    label_high: 複雑
+    inputs:
+      pitch_change_rate:   {weight: 0.25, direction: direct}
+      leap_ratio:          {weight: 0.20, direction: direct}
+      pitch_range:         {weight: 0.30, direction: direct}
+      repetition_score:    {weight: 0.25, direction: inverse}
+  8:  # おしゃれ(0) 〜 素朴(1) : G, H
+    label_low: おしゃれ
+    label_high: 素朴
+    inputs:
+      chord_complexity:    {weight: 0.40, direction: inverse}
+      chord_change_rate:   {weight: 0.20, direction: inverse}
+      gap_ratio:           {weight: 0.20, direction: inverse}
+      overlap_ratio:       {weight: 0.20, direction: inverse}

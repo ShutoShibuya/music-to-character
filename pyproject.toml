@@ -1,0 +1,23 @@
+[project]
+name = "musicchar"
+version = "0.1.0"
+description = "Music Character Generator: 楽曲の特徴からキャラクターSVGを生成する"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "scipy",
+    "librosa",
+    "soundfile",
+    "pyyaml",
+    "streamlit",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[tool.setuptools.packages.find]
+include = ["musicchar*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

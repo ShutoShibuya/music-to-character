@@ -1,0 +1,38 @@
+# 特徴量の正規化設定。各キーは「正規化済み特徴量」の名前で、impressions.yaml から参照される。
+# source : FeatureSet 内の属性パス
+# method : minmax = (x - min) / (max - min) を 0〜1 にクリップ
+# min/max: 0.0 / 1.0 に対応する値。
+#
+# ★ 範囲は暫定値。実際の楽曲で分布を確認して調整すること。
+features:
+  # A 調
+  major_score:          {source: a_key.major_score,                    method: minmax, min: 0,    max: 1}
+  # B テンポ
+  bpm:                  {source: b_tempo.bpm,                          method: minmax, min: 60,   max: 180}
+  # C メロディ
+  pitch_change_rate:    {source: c_melody.pitch_change_rate,           method: minmax, min: 0.5,  max: 8}
+  mean_interval:        {source: c_melody.mean_interval_semitones,     method: minmax, min: 0,    max: 7}
+  leap_ratio:           {source: c_melody.leap_ratio,                  method: minmax, min: 0,    max: 0.5}
+  repetition_score:     {source: c_melody.repetition_score,            method: minmax, min: 0,    max: 1}
+  smoothness:           {source: c_melody.smoothness,                  method: minmax, min: 0,    max: 1}
+  # D 音域(中心)
+  pitch_mean:           {source: d_pitch_center.mean_midi,             method: minmax, min: 36,   max: 84}
+  pitch_median:         {source: d_pitch_center.median_midi,           method: minmax, min: 36,   max: 84}
+  # E 音域(幅)
+  pitch_max:            {source: e_pitch_range.max_midi,               method: minmax, min: 48,   max: 96}
+  pitch_min:            {source: e_pitch_range.min_midi,               method: minmax, min: 24,   max: 72}
+  pitch_range:          {source: e_pitch_range.range_semitones,        method: minmax, min: 6,    max: 48}
+  # F 音量
+  rms_mean:             {source: f_dynamics.rms_mean,                  method: minmax, min: 0.01, max: 0.30}
+  rms_std:              {source: f_dynamics.rms_std,                   method: minmax, min: 0.005, max: 0.15}
+  rms_max:              {source: f_dynamics.rms_max,                   method: minmax, min: 0.1,  max: 1.0}
+  # G コード
+  chord_change_rate:    {source: g_chords.change_rate_per_sec,         method: minmax, min: 0.1,  max: 2.0}
+  chord_complexity:     {source: g_chords.complexity,                  method: minmax, min: 0,    max: 1}
+  chord_minor_ratio:    {source: g_chords.minor_ratio,                 method: minmax, min: 0,    max: 1}
+  # H アーティキュレーション
+  onset_strength_mean:  {source: h_articulation.onset_strength_mean,   method: minmax, min: 2,    max: 25}
+  onset_density:        {source: h_articulation.onset_density,         method: minmax, min: 0.5,  max: 8}
+  mean_note_duration:   {source: h_articulation.mean_note_duration,    method: minmax, min: 0.1,  max: 1.5}
+  overlap_ratio:        {source: h_articulation.overlap_ratio,         method: minmax, min: 0,    max: 1}
+  gap_ratio:            {source: h_articulation.gap_ratio,             method: minmax, min: 0,    max: 1}
